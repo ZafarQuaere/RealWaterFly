@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1016176226026",
+    "firebase_url": "https://waterfly-2816d.firebaseio.com",
+    "project_id": "waterfly-2816d",
+    "storage_bucket": "waterfly-2816d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016176226026:android:ea4f88a9c5fbeb228e7193",
+        "android_client_info": {
+          "package_name": "com.zaf.waterfly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1016176226026-ept4h6luhhi0beb65kroak2cmp02ievc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCejLlxub872tZlWXcQaSuyDBG2w_qm9-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1016176226026-ept4h6luhhi0beb65kroak2cmp02ievc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
