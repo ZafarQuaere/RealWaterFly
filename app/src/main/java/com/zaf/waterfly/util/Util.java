@@ -1,9 +1,12 @@
 package com.zaf.waterfly.util;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 public class Util {
     public static final String TAG = "PubNub>> ";
+
     public static void DEBUG(String sb) {
         //To print the log on debug mode only
 
@@ -22,4 +25,7 @@ public class Util {
             }
         }
 
+        public static void showToast(Context activity, String msg){
+            Toast.makeText(activity,msg, Toast.LENGTH_LONG).show();
+        }
 }

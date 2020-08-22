@@ -1,6 +1,7 @@
 package com.zaf.waterfly;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,21 +16,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.zaf.waterfly.util.Constants;
+import com.zaf.waterfly.util.Util;
 
 public class MainActivity extends AppCompatActivity {
 
     public static PubNub pubnub; // Pubnub instance
 
     Button driverButton, passengerButton; // Buttons that redirect user to proper view
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        initAd();
         driverButton = (Button) findViewById(R.id.driverButton);
         passengerButton = (Button) findViewById(R.id.passengerButton);
 
@@ -50,6 +60,74 @@ public class MainActivity extends AppCompatActivity {
         });
         checkPermission();
 
+    }
+
+    private void initAd() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) { }
+        });
+
+        displayInterstitialAd();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        displayInterstitialAd();
+    }
+
+    private void displayInterstitialAd() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(Constants.INTERSTITIAL_AD_UNIT);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        if (mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+        } else {
+            showInterstitial();
+        }
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                 Util.showToast(MainActivity.this, "onAdLoaded()");
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                @SuppressLint("DefaultLocale") String error =
+                        String.format("domain: %s, code: %d, message: %s",
+                                loadAdError.getDomain(), loadAdError.getCode(), loadAdError.getMessage());
+                Util.DEBUG(error);
+                Util.showToast(MainActivity.this, "onAdFailedToLoad() with error: " + error);
+            }
+
+            @Override
+            public void onAdClosed() {
+//                startGame();
+            }
+        });
+
+        // Create the "retry" button, which tries to show an interstitial between game plays.
+//        retryButton = findViewById(R.id.retry_button);
+//        retryButton.setVisibility(View.INVISIBLE);
+//        retryButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showInterstitial();
+//            }
+//        });
+
+    }
+
+    private void showInterstitial() {
+        // Show the ad if it's ready. Otherwise toast and restart the game.
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Util.showToast(this, "Ad did not load");
+//            startGame();
+        }
     }
 
     /*
@@ -87,13 +165,17 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(MainActivity.this,
                             Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                        Util.showToast(this, "Permission Granted");
                     }
                 } else {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                    Util.showToast(this, "Permission Denied");
                 }
                 return;
             }
         }
+    }
+
+    public void loadAd(View view) {
+        displayInterstitialAd();
     }
 }

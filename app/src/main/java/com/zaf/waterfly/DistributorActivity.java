@@ -10,6 +10,8 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Looper;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -41,6 +43,7 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
 
     private SupportMapFragment distributorMap; // MapView UI element
     private GoogleMap driverMap; // object that represents googleMap and allows us to use Google Maps API features
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,12 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
         sendUpdatedLocationMessage();
     }
 
+    private void initAd() {
+        mAdView = (AdView) findViewById(R.id.adViewDistributor);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.bringToFront();
+    }
     private void sendUpdatedLocationMessage() {
         try {
             mFusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {

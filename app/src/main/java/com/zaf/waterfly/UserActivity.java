@@ -10,8 +10,11 @@ import android.animation.ValueAnimator;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.LinearInterpolator;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,6 +52,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SupportMapFragment mMapFragment; // MapView UI element
     private GoogleMap gMap; // object that represents googleMap and allows us to use Google Maps API features
     private Marker driverMarker; // Marker to display driver's location
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,14 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.userMap);
         mMapFragment.getMapAsync(this);
+        initAd();
+    }
+
+    private void initAd() {
+        mAdView = (AdView) findViewById(R.id.adViewUser);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.bringToFront();
     }
 
     @Override
