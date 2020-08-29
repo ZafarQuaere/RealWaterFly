@@ -2,11 +2,16 @@ package com.zaf.waterfly;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -26,6 +31,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.navigation.NavigationView;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -36,6 +42,7 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
+import com.zaf.waterfly.user.UserRegisterActivity;
 import com.zaf.waterfly.util.Constants;
 import com.zaf.waterfly.util.JsonUtil;
 
@@ -52,20 +59,47 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SupportMapFragment mMapFragment; // MapView UI element
     private GoogleMap gMap; // object that represents googleMap and allows us to use Google Maps API features
     private Marker driverMarker; // Marker to display driver's location
-    private AdView mAdView;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+        setContentView(R.layout.user_nav_drawer);
+        initNavigation();
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.userMap);
         mMapFragment.getMapAsync(this);
         initAd();
     }
 
+    private void initNavigation() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    private void openDrawer() {
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    private void closeDrawer() {
+        if (drawer != null ){
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+
     private void initAd() {
-        mAdView = (AdView) findViewById(R.id.adViewUser);
+        AdView mAdView = (AdView) findViewById(R.id.adViewUser);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         mAdView.bringToFront();
@@ -247,5 +281,19 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         valueAnimator.start();
+    }
+
+
+    public void logoutClick(View view) {
+        closeDrawer();
+    }
+
+    public void registerClick(View view) {
+        closeDrawer();
+        startActivity(new Intent(this, UserRegisterActivity.class));
+    }
+
+    public void rateUsClick(View view) {
+        closeDrawer();
     }
 }
