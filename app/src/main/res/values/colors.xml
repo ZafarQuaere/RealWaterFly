@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimary">#52F86402</color>
+    <color name="colorPrimaryDark">#52B54800</color>
     <color name="colorAccent">#03DAC5</color>
+
+
+    <!-- Dialog single button colors -->
+    <color name="dialog_text_color">#000000</color>
+    <color name="dialog_bg_color">#f1f1f1</color>
+    <color name="dialog_separator_color">@color/colorPrimary</color>
+    <color name="dialog_btn_text_color">@color/colorPrimary</color>
 </resources>

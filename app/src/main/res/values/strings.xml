@@ -27,4 +27,9 @@
     <string name="logout">Logout</string>
     <string name="register">Register</string>
     <string name="rate_us">Rates Us</string>
+
+    <string name="ok">OK</string>
+    <string name="you_are_sucessfully_logout">You are successfully logout.</string>
+    <string name="cancel">Cancel</string>
+    <string name="do_you_really_want_to_logout">Do you really wants to Logout ?</string>
 </resources>

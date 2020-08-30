@@ -44,7 +44,9 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.zaf.waterfly.user.UserRegisterActivity;
 import com.zaf.waterfly.util.Constants;
+import com.zaf.waterfly.util.DialogButtonClick;
 import com.zaf.waterfly.util.JsonUtil;
+import com.zaf.waterfly.util.Util;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -286,6 +288,17 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void logoutClick(View view) {
         closeDrawer();
+        Util.showDialogDoubleButton(this, "Cancel", "Ok", getString(R.string.do_you_really_want_to_logout), new DialogButtonClick() {
+            @Override
+            public void onOkClick() {
+                    //TODO
+            }
+
+            @Override
+            public void onCancelClick() {
+
+            }
+        });
     }
 
     public void registerClick(View view) {
