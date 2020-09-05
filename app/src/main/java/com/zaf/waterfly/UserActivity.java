@@ -11,9 +11,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -62,11 +64,13 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap gMap; // object that represents googleMap and allows us to use Google Maps API features
     private Marker driverMarker; // Marker to display driver's location
     private DrawerLayout drawer;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_nav_drawer);
+        mContext  = this;
         initNavigation();
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.userMap);
@@ -233,7 +237,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
        to move the marker slowly along linear path to this location.
        Also moves camera, if marker is outside of map bounds.
     */
-    private void updateUI(Map<String, String> newLoc) {
+    private void updateUI(final Map<String, String> newLoc) {
         LatLng newLocation = new LatLng(Double.parseDouble(newLoc.get("lat")), Double.parseDouble(newLoc.get("lng")));
         if (driverMarker != null) {
             animateCar(newLocation);
@@ -249,6 +253,18 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
                     newLocation, 15.5f));
             driverMarker = gMap.addMarker(new MarkerOptions().position(newLocation).
                     icon(BitmapDescriptorFactory.fromResource(R.drawable.car1)));
+            driverMarker.setTitle(newLoc.get("mobile"));
+            driverMarker.setTag("300 mts");
+            gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    Util.showToast(mContext,marker.getTitle() );
+                    Intent intent  = new Intent(Intent.ACTION_CALL);
+                    intent.setData(Uri.parse(newLoc.get("mobile")));
+                    startActivity(intent);
+                    return false;
+                }
+            });
         }
     }
 

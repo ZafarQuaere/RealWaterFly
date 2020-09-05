@@ -46,6 +46,7 @@
             tools:layout_editor_absoluteY="231dp" />
 
         <Button
+            android:visibility="gone"
             android:id="@+id/loadAd"
             android:onClick="loadAd"
             android:layout_width="wrap_content"

@@ -3,12 +3,14 @@ package com.zaf.waterfly;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.View;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -106,6 +108,7 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
         map.put("lat", String.valueOf(lat));
         map.put("lng", String.valueOf(lng));
+        map.put("mobile","7834908329");
         return map;
     }
 
@@ -113,6 +116,17 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
     private void updateUI() {
          distributorMap = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.distributorMap);
          distributorMap.getMapAsync(this);
+
+        Toolbar toolbar = findViewById(R.id.distributorToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
     }
 
     @Override
