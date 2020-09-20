@@ -1,5 +1,6 @@
 package com.zaf.waterfly.util;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -67,4 +68,22 @@ public class Util {
         });
         dialog.show();
     }
+
+    public static void setUserType(Activity mContext, String b) {
+        if (mContext == null)
+            return;
+        AppSharedPrefs prefs = AppSharedPrefs.getInstance(mContext);
+        prefs.put(mContext.getString(R.string.key_user_type), b);
+    }
+
+    public static String getUserType(Activity context) {
+        AppSharedPrefs prefs = AppSharedPrefs.getInstance(context);
+        String userType = null;
+        userType = (String) prefs.get(context.getString(R.string.key_user_type));
+        if (userType == null) {
+            return null;
+        }
+        return userType;
+    }
+
 }

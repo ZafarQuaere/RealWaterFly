@@ -38,28 +38,43 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initAd();
+        initPubnub();
+//        if (Util.getUserType(this) == null) {
+            setContentView(R.layout.activity_main);
+            initAd();
+            initUi();
+
+            checkPermission();
+        /*} else {
+            if (Util.getUserType(this).equalsIgnoreCase("Distributor")){
+                startActivity(new Intent(MainActivity.this, DistributorActivity.class));
+                finish();
+            } else {
+                startActivity(new Intent(MainActivity.this, UserActivity.class));
+                finish();
+            }
+        }*/
+
+    }
+
+    private void initUi() {
         driverButton = (Button) findViewById(R.id.driverButton);
         passengerButton = (Button) findViewById(R.id.passengerButton);
-
-        initPubnub();
-
         // Send user to Driver Activity or Passenger Activity using intents
         driverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Util.setUserType(MainActivity.this, "Distributor");
                 startActivity(new Intent(MainActivity.this, DistributorActivity.class));
             }
         });
         passengerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Util.setUserType(MainActivity.this, "User");
                 startActivity(new Intent(MainActivity.this, UserActivity.class));
             }
         });
-        checkPermission();
-
     }
 
     private void initAd() {

@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/app_bar_user"
-    tools:context=".UserActivity">
+    tools:showIn="@layout/app_bar_distributor"
+    tools:context=".DistributorActivity">
 
     <fragment
-        android:id="@+id/userMap"
+        android:id="@+id/distributorMap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

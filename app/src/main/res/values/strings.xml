@@ -32,4 +32,6 @@
     <string name="you_are_sucessfully_logout">You are successfully logout.</string>
     <string name="cancel">Cancel</string>
     <string name="do_you_really_want_to_logout">Do you really wants to Logout ?</string>
+    <string name="key_shared_prefs">key_shared_prefs</string>
+    <string name="key_user_type">key_user_type</string>
 </resources>

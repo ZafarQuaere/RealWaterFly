@@ -14,8 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".user.UserRegisterActivity"></activity>
-        <!-- Adding admob app id -->
+        <activity android:name=".activity.PermissionActivity"></activity>
+        <activity android:name=".user.UserRegisterActivity" /> <!-- Adding admob app id -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9241944820372408~6883510579" />

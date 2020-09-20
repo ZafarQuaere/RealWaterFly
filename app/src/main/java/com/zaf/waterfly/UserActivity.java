@@ -19,6 +19,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -26,9 +28,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -65,6 +69,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Marker driverMarker; // Marker to display driver's location
     private DrawerLayout drawer;
     private Context mContext;
+    private ImageView mCurrentPointer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,9 +146,11 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions mk = new MarkerOptions();
         mk.position(latLng);
+        mk.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_pin));
         gMap.addMarker(mk);
         gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         gMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
     }
 
     @Override
@@ -183,6 +190,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
             gMap.setMyLocationEnabled(true);
             gMap.setMinZoomPreference(12F);
             gMap.setIndoorEnabled(true);
+
             UiSettings uiSettings  = gMap.getUiSettings();
             uiSettings.setIndoorLevelPickerEnabled(true);
             uiSettings.setMyLocationButtonEnabled(true);

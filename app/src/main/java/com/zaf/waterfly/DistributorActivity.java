@@ -1,16 +1,19 @@
 package com.zaf.waterfly;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -28,10 +31,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.navigation.NavigationView;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.zaf.waterfly.user.UserRegisterActivity;
 import com.zaf.waterfly.util.Constants;
+import com.zaf.waterfly.util.DialogButtonClick;
 import com.zaf.waterfly.util.Util;
 
 import java.util.LinkedHashMap;
@@ -46,6 +52,7 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
     private SupportMapFragment distributorMap; // MapView UI element
     private GoogleMap driverMap; // object that represents googleMap and allows us to use Google Maps API features
     private AdView mAdView;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,7 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
         mAdView.loadAd(adRequest);
         mAdView.bringToFront();
     }
+
     private void sendUpdatedLocationMessage() {
         try {
             mFusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
@@ -108,16 +116,25 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
         map.put("lat", String.valueOf(lat));
         map.put("lng", String.valueOf(lng));
-        map.put("mobile","7834908329");
+        map.put("mobile", "7834908329");
         return map;
     }
 
 
     private void updateUI() {
-         distributorMap = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.distributorMap);
-         distributorMap.getMapAsync(this);
+        distributorMap = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.distributorMap);
+        distributorMap.getMapAsync(this);
 
-        Toolbar toolbar = findViewById(R.id.distributorToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.distributorToolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout_distributor);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+       /* Toolbar toolbar = findViewById(R.id.distributorToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -125,8 +142,45 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
             public void onClick(View v) {
                 onBackPressed();
             }
-        });
+        });*/
 
+    }
+
+    private void openDrawer() {
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    private void closeDrawer() {
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    public void logoutClick(View view) {
+        closeDrawer();
+        Util.showDialogDoubleButton(this, "Cancel", "Ok", getString(R.string.do_you_really_want_to_logout), new DialogButtonClick() {
+            @Override
+            public void onOkClick() {
+                //TODO
+            }
+
+            @Override
+            public void onCancelClick() {
+
+            }
+        });
+    }
+
+    public void registerClick(View view) {
+        closeDrawer();
+        startActivity(new Intent(this, UserRegisterActivity.class));
+    }
+
+    public void rateUsClick(View view) {
+        closeDrawer();
     }
 
     @Override
@@ -201,7 +255,7 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
             driverMap.setMyLocationEnabled(true);
             driverMap.setMinZoomPreference(12F);
             driverMap.setIndoorEnabled(true);
-            UiSettings uiSettings  = driverMap.getUiSettings();
+            UiSettings uiSettings = driverMap.getUiSettings();
             uiSettings.setIndoorLevelPickerEnabled(true);
             uiSettings.setMyLocationButtonEnabled(true);
             uiSettings.setMapToolbarEnabled(true);
