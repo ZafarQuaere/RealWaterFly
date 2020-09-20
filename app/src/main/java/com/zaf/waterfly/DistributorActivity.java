@@ -126,6 +126,7 @@ public class DistributorActivity extends AppCompatActivity implements OnMapReady
         distributorMap.getMapAsync(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.distributorToolbar);
+        toolbar.setTitle(R.string.water_fly);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout_distributor);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 

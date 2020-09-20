@@ -85,6 +85,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void initNavigation() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.water_fly);
          drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
