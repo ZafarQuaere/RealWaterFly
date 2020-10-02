@@ -17,10 +17,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -70,6 +73,8 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DrawerLayout drawer;
     private Context mContext;
     private ImageView mCurrentPointer;
+    private TextView textDistance;
+    private Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void initNavigation() {
+        textDistance = findViewById(R.id.textDistance);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.water_fly);
          drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -144,6 +150,7 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
+        userLocation = location;
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions mk = new MarkerOptions();
         mk.position(latLng);
@@ -151,36 +158,6 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
         gMap.addMarker(mk);
         gMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         gMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
@@ -247,34 +224,55 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
        Also moves camera, if marker is outside of map bounds.
     */
     private void updateUI(final Map<String, String> newLoc) {
-        LatLng newLocation = new LatLng(Double.parseDouble(newLoc.get("lat")), Double.parseDouble(newLoc.get("lng")));
+        LatLng distributorLatLng = new LatLng(Double.parseDouble(newLoc.get("lat")), Double.parseDouble(newLoc.get("lng")));
+        Location waterLocation = new Location("WaterLoc");
+        waterLocation.setLatitude(distributorLatLng.latitude);
+        waterLocation.setLongitude(distributorLatLng.longitude);
+        updateDistance(waterLocation);
         if (driverMarker != null) {
-            animateCar(newLocation);
+            animateCar(distributorLatLng);
             boolean contains = gMap.getProjection()
                     .getVisibleRegion()
                     .latLngBounds
-                    .contains(newLocation);
+                    .contains(distributorLatLng);
             if (!contains) {
-                gMap.moveCamera(CameraUpdateFactory.newLatLng(newLocation));
+                gMap.moveCamera(CameraUpdateFactory.newLatLng(distributorLatLng));
             }
         } else {
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    newLocation, 15.5f));
-            driverMarker = gMap.addMarker(new MarkerOptions().position(newLocation).
-                    icon(BitmapDescriptorFactory.fromResource(R.drawable.car1)));
+                    distributorLatLng, 15.5f));
+            driverMarker = gMap.addMarker(new MarkerOptions().position(distributorLatLng).
+                    icon(BitmapDescriptorFactory.fromResource(R.drawable.lorry)));
             driverMarker.setTitle(newLoc.get("mobile"));
             driverMarker.setTag("300 mts");
             gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
                     Util.showToast(mContext,marker.getTitle() );
-                    Intent intent  = new Intent(Intent.ACTION_CALL);
+                   /* Intent intent  = new Intent(Intent.ACTION_CALL);
                     intent.setData(Uri.parse(newLoc.get("mobile")));
-                    startActivity(intent);
+                    startActivity(intent);*/
                     return false;
                 }
             });
         }
+
+    }
+
+    private void updateDistance(final Location waterLocation) {
+        Util.DEBUG(" UserLocation: " + userLocation+"  waterLocation: "+waterLocation);
+        if (userLocation == null){
+            userLocation = Util.getUsersCurrentLocation(UserActivity.this);
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                double distance = userLocation.distanceTo(waterLocation);
+                Util.DEBUG(" Distance: " + distance);
+                textDistance.setText(""+distance);
+            }
+        },3000);
+
     }
 
 
@@ -325,6 +323,24 @@ public class UserActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    @Override
+    public void onProviderEnabled(String provider) {}
+
+    @Override
+    public void onProviderDisabled(String provider) {}
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {}
+
+    @Override
+    public void onConnectionSuspended(int i) {}
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
     public void registerClick(View view) {
         closeDrawer();

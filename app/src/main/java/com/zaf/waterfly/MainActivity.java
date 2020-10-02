@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initPubnub();
-//        if (Util.getUserType(this) == null) {
+       if (Util.getUserType(this) == null) {
             setContentView(R.layout.activity_main);
             initAd();
             initUi();
 
             checkPermission();
-        /*} else {
+        } else {
             if (Util.getUserType(this).equalsIgnoreCase("Distributor")){
                 startActivity(new Intent(MainActivity.this, DistributorActivity.class));
                 finish();
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, UserActivity.class));
                 finish();
             }
-        }*/
+        }
 
     }
 
